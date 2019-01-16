@@ -1,0 +1,32 @@
+name: ponymix
+base: core18
+version: '5'
+summary: CLI volume control for PulseAudio
+description: |
+  Ponymix is a command line mixer for PulseAudio.
+
+grade: stable
+confinement: strict
+
+parts:
+  ponymix:
+    plugin: make
+    source: https://github.com/falconindy/ponymix.git
+    source-tag: "5"
+    build-packages:
+      - pkg-config
+      - libpulse-dev
+    stage-packages:
+      - libnotify4
+      - libpulse0
+
+apps:
+  ponymix:
+    command: ponymix
+    plugs:
+      - pulseaudio
+      - x11
+    environment:
+      # Without this env we can't find the libpulsecommon library
+      LD_LIBRARY_PATH: $LD_LIBRARY_PATH:$SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/pulseaudio
+
